@@ -16,6 +16,7 @@ import { Module } from '@nestjs/core/injector/module';
 import { EventEmitter2 } from 'eventemitter2';
 import { EventsMetadataAccessor } from './events-metadata.accessor';
 import { OnEventOptions } from './interfaces';
+import { EventRequestObject } from './interfaces/event-request-object.interface';
 
 @Injectable()
 export class EventSubscribersLoader
@@ -131,7 +132,9 @@ export class EventSubscribersLoader
       event,
       async (...args: unknown[]) => {
         const request = this.getRequestFromEventPayload(args);
-        const contextId = ContextIdFactory.getByRequest({ payload: request });
+        const contextId = ContextIdFactory.getByRequest<
+          EventRequestObject<unknown>
+        >({ payload: request });
 
         this.moduleRef.registerRequestByContextId(request, contextId);
 
